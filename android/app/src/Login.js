@@ -7,30 +7,37 @@ import {
 
 function Login(props) {
 
-   const[isValid, setIsValid]= useState('');
+    const [isValid, setIsValid] = useState("");
 
-   let validemail="/\S+@\S+\.\S+/";
-   
-   const checkemail = (email)=>{
-      if(validemail.test(email)){
-        setIsValid("inValid email");
-      }
-      else{
-        setIsValid('');
-      }
-            
-   }
+    let validemail = /\S+@\S+\.\S+/;
+
+    const checkemail = (email) => {
+        if (!validemail.test(email) && email!='') {
+            setIsValid("inValid email");
+        }
+        else {
+            setIsValid("");
+        }
+
+    }
 
 
     return (
         <SafeAreaView style={[ styles.container]}>
             <View>
                 <Text style={styles.text}>Log-In</Text>
+
+                <View>
+                <Text style={styles.textvalidation}>{isValid}</Text>
                 <TextInput style={styles.input}
-                placeholder="Enter your email"
-                
-                ></TextInput>
-                <Text>{isValid}</Text>
+                    placeholder="Enter your email"
+                    onChangeText={(email) => {
+                        checkemail(email);
+                    }}
+                >
+                </TextInput>
+                </View>
+             
                 <TextInput style={styles.input}
                 placeholder="Enter password"
                     ></TextInput>
@@ -73,6 +80,11 @@ const styles = StyleSheet.create({
         color: 'black',
         textAlign: 'center',
 
+    },
+
+    textvalidation: {
+        color: 'black',
+        textAlign: 'center',
     },
 
     input:{
