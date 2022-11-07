@@ -5,6 +5,7 @@ import {
     TouchableHighlight, Text, TextInput, View, TouchableOpacity, Alert,
 } from "react-native";
 
+
 function Login(props) {
 
     const [emailAddress, setEmailAddress] = useState("");
@@ -77,19 +78,7 @@ function Login(props) {
 
     const loginStatus = () => {
         if (myEmail == emailAddress && myPassword == enteredPassword) {
-            Alert.alert(
-                "Alert",
-                "Logged in successfully",
-                [
-                    {
-                        text: "Ok",
-                        
-                    },
-                ],
-                {
-                    cancelable: true,
-                }
-            );
+            props.SetShowloginSignupMainPage(!props.showShowloginSignupMainPage);
         }
         else {
             Alert.alert(
@@ -118,58 +107,68 @@ function Login(props) {
     }
 
     return (
-        <SafeAreaView style={[styles.container]}>
-            <View>
-                <Text style={styles.text}>Log-In</Text>
+        <SafeAreaView style={styles.container1}>
 
+            <Text style={styles.text} >Todo App</Text>
+
+            <SafeAreaView style={[styles.container]}>
                 <View>
-                    <Text style={styles.textvalidation1}>{isValidEmail}</Text>
-                    <TextInput style={styles.input}
-                        placeholder="Enter your email"
-                        onChangeText={(email) => {
-                            checkEmail(email);
-                        }}
-                        keyboardType="email-address">
-                    </TextInput>
-                </View>
+                    <Text style={styles.text}>Log-In</Text>
 
-                <View>
-
-                    <View flexDirection="row" >
+                    <View>
+                        <Text style={styles.textvalidation1}>{isValidEmail}</Text>
                         <TextInput style={styles.input}
-                            placeholder="Enter password"
-                            onChangeText={(pass) => {
-                                checkPassword(pass);
+                            placeholder="Enter your email"
+                            onChangeText={(email) => {
+                                checkEmail(email);
                             }}
-                            keyboardType="password"
-                            secureTextEntry={showHide == "Hide" ? false : true}
-
-                        ></TextInput>
-                        <Text onPress={ShowHideCall} style={styles.inputshowhide}>{showHide}</Text>
+                            keyboardType="email-address">
+                        </TextInput>
                     </View>
 
-                    <Text style={isValidPassword == "Weak password" ? styles.textvalidation1 : styles.textvalidation2}
-                    >{isValidPassword}</Text>
+                    <View>
+
+                        <View flexDirection="row" >
+                            <TextInput style={styles.input}
+                                placeholder="Enter password"
+                                onChangeText={(pass) => {
+                                    checkPassword(pass);
+                                }}
+                                keyboardType="password"
+                                secureTextEntry={showHide == "Hide" ? false : true}
+
+                            ></TextInput>
+                            <Text onPress={ShowHideCall} style={styles.inputshowhide}>{showHide}</Text>
+                        </View>
+
+                        <Text style={isValidPassword == "Weak password" ? styles.textvalidation1 : styles.textvalidation2}
+                        >{isValidPassword}</Text>
+
+                    </View>
+
+                    <TouchableOpacity style={styles.btn} onPress={loginStatus}>
+                        <Text style={styles.textlogin}>Log-In</Text>
+                    </TouchableOpacity>
 
                 </View>
-
-                <TouchableOpacity style={styles.btn} onPress={loginStatus}>
-                    <Text style={styles.textlogin}>Log-In</Text>
-                </TouchableOpacity>
-
-            </View>
-            <View style={styles.viewdesc}>
-                <Text>Don't have an account?</Text>
-                <TouchableHighlight onPress={() => { props.SetShow(!props.show) }}>
-                    <Text style={styles.viewdesctext}> Sign up</Text>
-                </TouchableHighlight>
-            </View>
+                <View style={styles.viewdesc}>
+                    <Text>Don't have an account?</Text>
+                    <TouchableHighlight onPress={() => { props.SetShow(!props.show) }}>
+                        <Text style={styles.viewdesctext}> Sign up</Text>
+                    </TouchableHighlight>
+                </View>
+            </SafeAreaView>
         </SafeAreaView>
     );
 }
 
 
 const styles = StyleSheet.create({
+    container1: {
+        flex: 1,
+        backgroundColor: '#F0FFFF'
+    },
+
     container: {
         flex: 1,
 

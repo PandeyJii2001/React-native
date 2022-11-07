@@ -4,25 +4,23 @@ import React, { useState } from "react";
 import {
   StyleSheet,
   SafeAreaView,
-  ScrollView, Text, View
+  Text
 } from "react-native";
 
-import MainScreen from "./android/app/src/MainScreen";
-import Login from "./android/app/src/Login";
+import Login from "./Login";
+import SignIn from "./SignIn";
 
-function App() {
+function LoginSignup(props) {
 
-  const [showloginSignupMainPage, setShowloginSignupMainPage] = useState(true);
   const [showPage, setShowPage] = useState(true);
-
 
   return (
     <SafeAreaView style={styles.container}>
 
-      {showloginSignupMainPage ? <Login showShowloginSignupMainPage={showloginSignupMainPage}
-        SetShowloginSignupMainPage={setShowloginSignupMainPage}
-        show={showPage} SetShow={setShowPage} /> :
-        <MainScreen />}
+      <Text style={styles.text} >Todo App</Text>
+
+      {showPage ? <Login show={showPage} SetShow={setShowPage} /> :
+        <SignIn show={showPage} SetShow={setShowPage} />}
 
     </SafeAreaView>
   );
@@ -49,7 +47,7 @@ const styles = StyleSheet.create({
 
 
 
-export default App;
+export default LoginSignup;
 
 
 
