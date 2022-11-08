@@ -12,7 +12,7 @@ import Login from "./android/app/src/Login";
 
 function App() {
 
-  const [showloginSignupMainPage, setShowloginSignupMainPage] = useState(true);
+  const [showloginSignupMainPage, setShowloginSignupMainPage] = useState(false);
   const [showPage, setShowPage] = useState(true);
 
 
