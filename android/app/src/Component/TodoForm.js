@@ -1,23 +1,25 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { useIsFocused } from '@react-navigation/native';
-import moment from 'moment/moment';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity } from 'react-native'
 import DatePicker from 'react-native-date-picker';
 import { RadioButton } from 'react-native-paper';
-import { save } from './realm';
+
+import { fetchObjects, save } from '../realm';
+
 
 function TodoForm({ navigation, props }) {
 
-    const [open, setOpen] = useState(false)
+    // const [open, setOpen] = useState(false)
 
     const [displaytodos, setDisplaytodos] = useState([]);
 
     const [title, setTitle] = useState('');
     const [discription, setDiscription] = useState('');
     const [dueDate, setDueDate] = useState(new Date());
-    const [status, setStatus] = useState('');
-    const [checked, setChecked] = useState('');
+    const [status, setStatus] = useState('pending');
+    const [checked, setChecked] = useState('pending');
 
     const fun = async () => {
         let value = fetchObjects('todos');
@@ -25,13 +27,9 @@ function TodoForm({ navigation, props }) {
         console.log(value);
 
 
-        // let result =await  AsyncStorage.getItem('todos');
-        //   seTodoResult(JSON.parse(result));
-        //   console.log((result));
-
         // let result = await AsyncStorage.getItem('todos');
-
         // setDisplaytodos(JSON.parse(result));
+         //   console.log((result));
     }
 
     useEffect(() => {
@@ -41,8 +39,17 @@ function TodoForm({ navigation, props }) {
 
 
     const addTodoItem = async (newtodoitem) => {
+        let Id = 0;
+        displaytodos.forEach((t) => {
+            if (t.Id >= Id) {
+                Id = t.Id + 1;
+            }
+        });
+        newtodoitem['Id'] = Id;
         console.log(newtodoitem);
         save('todos', newtodoitem);
+
+
         fun();
 
         // let todoListitem = displaytodos;
@@ -90,19 +97,22 @@ function TodoForm({ navigation, props }) {
                     model
                     minimumDate={new Date(Date.now())}
                     mode="date"
-                    open={false}
                     date={dueDate}
 
-                    onConfirm={(date) => {
-                        setOpen(false);
-                    }}
                     onDateChange={(date) => {
                         setDueDate(date);
 
                     }}
-                    onCancel={() => {
-                        setOpen(false)
-                    }}
+
+                    // open={false}
+
+                    // onConfirm={(date) => {
+                    //     setOpen(false);
+                    // }}
+                    
+                    // onCancel={() => {
+                    //     setOpen(false)
+                    // }}
                 />
 
                 <View style={styles.statusView}>

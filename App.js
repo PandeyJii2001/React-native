@@ -1,14 +1,11 @@
-
-
 import React, { useState } from "react";
 import {
   StyleSheet,
-  SafeAreaView,
-  ScrollView, Text, View
+  SafeAreaView
 } from "react-native";
 
 import MainScreen from "./android/app/src/MainScreen";
-import Login from "./android/app/src/Login";
+import Login from "./android/app/src/Form/Login";
 
 function App() {
 

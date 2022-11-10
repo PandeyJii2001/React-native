@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -7,8 +5,8 @@ import {
   Text
 } from "react-native";
 
-import Login from "./Login";
-import SignIn from "./SignIn";
+import Login from "./Form/Login";
+import SignIn from "./Form/SignIn";
 
 function LoginSignup(props) {
 

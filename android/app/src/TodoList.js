@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import React, { useEffect, useState } from 'react';
-import { Button, View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import ToDo from './ToDo';
@@ -9,7 +10,6 @@ import Done from './Done';
 
 function TodoList({ navigation }) {
 
-  // AsyncStorage.clear();
 
   const [toDoShow, setToDoShow] = useState('');
   const [toDoShowName, setToDoShowName] = useState('');
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
 
   testusernameView: {
-    paddingVertical: 50
+    paddingVertical: 30
   },
 
   tododoingdoneView: {
@@ -99,6 +99,10 @@ const styles = StyleSheet.create({
     padding: 20,
     width: '85%',
     borderRadius: 18,
+
+    position: 'relative',
+    top: 35,
+
     zIndex: 2,
 
     shadowColor: "#000",

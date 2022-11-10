@@ -1,55 +1,119 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import  AsyncStorage  from '@react-native-async-storage/async-storage';
-import { fetchObjects } from './realm';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { deleteRealm, fetchObjects } from './realm';
+import { useNavigation } from '@react-navigation/native';
 
 function Done(){
 
-  const[todoResult, seTodoResult]= useState([]);
+  const navigation = useNavigation();
 
-  const fun = async()=>{
-   
+  const [todoResult, seTodoResult] = useState([]);
+
+  const fun = async () => {
+
     let value = fetchObjects('todos');
     seTodoResult(value);
-    console.log(result);
+    console.log(value);
 
+
+    //To Delete all item from database;..deleteRealm implemenetd in realm.js file.
+    // deleteRealm(value); Delete all item from database;
+   
+
+    //To Delete all item from AsyncStorage;
+    // AsyncStorage.clear();
 
     // let result =await  AsyncStorage.getItem('todos');
     //   seTodoResult(JSON.parse(result));
     //   console.log((result));
+
   }
-  
-  useEffect( ()=>{
+
+  useEffect(() => {
     fun()
   },
-  [])
-   
+    [])
+
+ 
+    const deleteItem =(object, id)=>{
+  
+      deleteRealm(object);
+  
+      let value = fetchObjects('todos');
+      seTodoResult(value);
+  
+    }
+  
+    const ShowAlert = (object)=>{
+      Alert.alert(  
+        'Please select an action or cancel',  
+        `Do you want to delete or edit ${object.Title} ?`,  
+        [  
+            {  
+                text: 'Cancel',  
+                // onPress: () => console.log('Cancel Pressed'),  
+                // style: 'cancel',  
+            },  
+            {
+              text: 'DELETE', 
+              onPress: () =>{
+                deleteItem(object, object.Id)
+              } 
+            },  
+            {  
+              text: 'EDIT',  
+              onPress: () =>{
+                navigation.navigate('Edit Item',  object)
+              }
+          },  
+        ]  
+    ); 
+    }
+ 
+let count=0;
+
    return(
-    <ScrollView style={styles.itemTodoListView}>
+    <ScrollView style={styles.itemTodoListView} 
+    contentContainerStyle={{paddingTop: 45}}>
       { todoResult && todoResult.length > 0 ?
       todoResult.map((result, index) => {
           if(result.Status==='done'){
           return (
             
-        <View style={styles.itemTodoList}>
-         { result.Status=='done'?
-           <Text style={[styles.StatusDP , styles.StatusDPD]} >D</Text> :
-           <Text style={[styles.StatusDP, styles.StatusDPP ]} >P</Text>
-        }
-         <View width='40%'>
-           
-        <Text style={styles.itemTodoListText}>{result.Title}</Text>
-        <Text style={styles.itemTodoListTextdisc}>{result.Discription}</Text>
-        </View>
-        <Text style={styles.itemTodoListTextDate}>{result.DueDate}</Text>
-        </View>
+            <TouchableOpacity 
+            key={index} style={styles.itemTodoList}>
+             {result.Status == 'done' ?
+               <Text style={[styles.StatusDP, styles.StatusDPD]} >D</Text> :
+               <Text style={[styles.StatusDP, styles.StatusDPP]} >P</Text>
+             }
+             <View width='50%'>
+
+               <Text style={styles.itemTodoListText}>{result.Title}</Text>
+               <Text style={styles.itemTodoListTextdisc}>{result.Discription}</Text>
+             </View>
+             <Text style={styles.itemTodoListTextDate}>{result.DueDate}</Text>
+             
+               <Text onPress={()=>{
+                 ShowAlert(result)}
+               }
+               style={styles.itemTodoListTextDateDeleteEdit}>Click</Text>
+              
+              </TouchableOpacity>
          
        
        ) 
       }
       else{
-        <Text style={styles.listIsEmpty}>Nothing is Pending in Todo List</Text>
-      }
+        count++;
+        if(count==todoResult.length)
+        return(
+        <Text key={index}
+        style={styles.listIsEmpty}>Nothing is completed in Todo List</Text>
+      )}
       
        })
        : 
@@ -67,98 +131,122 @@ const styles = StyleSheet.create({
 
   StatusDP: {
     color: 'white',
-     borderRadius: 30,
-     fontSize: 30,
-    paddingHorizontal: 15,
-     marginRight: 5,
-     fontWeight: 'bold',
-     textAlignVertical:'center',
-     height: 50
+    borderRadius: 30,
+    fontSize: 25,
+    paddingRight: 8,
+    paddingLeft: 12,
+    marginRight: 5,
+    fontWeight: 'bold',
+    textAlignVertical: 'center',
+    height: 40,
+
+    // borderWidth:2
   },
 
-  StatusDPD :{
+  StatusDPD: {
     backgroundColor: 'green',
   },
 
-  StatusDPP :{
+  StatusDPP: {
     backgroundColor: 'red',
   },
 
-  tododoingdoneViewtext:{
-    fontSize: 20,
-    marginHorizontal: 20,
-    
-  },
 
-  
   itemTodoListView: {
     height: '100%',
     width: '100%',
     backgroundColor: 'white',
-    borderTopEndRadius: 20,
-    borderTopStartRadius: 20,
-    paddingTop: 45,
-    paddingBottom: 30,
-    paddingHorizontal: 10,
-    position: 'relative',
-    bottom: 30,
-   
+
+    borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
+
+    
+    overflow: "hidden",
+   background: 'transparent',
+    paddingHorizontal: 5,
+    // position: 'relative',
+    // bottom: 30,
+    
     zIndex: 1,
+
   },
 
-  itemTodoList :{
+  itemTodoList: {
+   
     flexDirection: 'row',
-     backgroundColor: 'white',
-     marginBottom: 10,
-     padding: 15,
-     borderRadius: 18,
-     zIndex: 2,
-     
-     alignItems: 'center',
+    backgroundColor: 'white',
+    marginBottom: 10,
+    padding: 5,
+    borderRadius: 18,
+    zIndex: 1,
 
-     shadowColor: "#000",
+    alignItems: 'center',
+
+    shadowColor: "#000",
     shadowOffset: {
-	    width: 0,
-	    height: 2,
-     },
+      width: 0,
+      height: 2,
+    },
     shadowOpacity: 0.23,
     shadowRadius: 10,
 
     elevation: 4,
-    },
-   
-    itemTodoListText:{
-        fontSize: 20,
-        color: 'black',
-        fontWeight: 'bold',
-      },
-  
-      itemTodoListTextdisc:{
-        fontSize: 20,
-        color: 'gray',
-        
-      },
 
-    itemTodoListTextDate:{
-      fontSize: 20,
-      color: 'black',
-      position: 'absolute',
-      right: 10,
-      margin:10,
-      width: '30%',
-      color: 'red'
-    },
+    // borderWidth:2
+  },
+
+  itemTodoListText: {
+    fontSize: 20,
+    color: 'black',
+    fontWeight: 'bold',
+   
+    // borderWidth:2
+  },
+
+  itemTodoListTextdisc: {
+    fontSize: 20,
+    color: 'gray',
+   
+    // borderWidth:2
+  },
+
+  itemTodoListTextDate: {
+    fontSize: 20,
+    color: 'black',
+    position: 'absolute',
+    right: 53,
+    paddingVertical: 3,
+    // margin: 10,
+    width: '25%',
+    color: 'red',
+
+    // borderWidth:2
+  },
+
+  itemTodoListTextDateDeleteEdit:{
+    position: 'absolute',
+    right: 2,
+    padding: 5,
+    borderRadius: 10,
+    backgroundColor: 'green',
+    fontSize: 18,
+    color: 'white', 
+
+    // borderWidth:2,
+   
+  },
+
+
 
   listIsEmpty: {
     fontSize: 25,
     color: 'red',
     fontStyle: 'italic',
     textAlign: 'center',
-    
-  }
-  
 
+  }
 });
+
 
 
 
